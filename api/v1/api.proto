@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package inquiry;
+
+option go_package = "github.com/romanzimoglyad/inquiry-backend/pb/inquiry;inquiry";
+
+import "google/api/annotations.proto";
+
+service Inquiry {
+  // Ping
+  rpc Ping (PingRequest) returns (PingResponse) {
+    option (google.api.http) = {
+      get: "/ping"
+    };
+  };
+}
+
+message PingRequest {
+
+}
+message PingResponse {
+  string status = 1;
+}
