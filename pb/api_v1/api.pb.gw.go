@@ -116,9 +116,9 @@ func RegisterInquiryHandler(ctx context.Context, mux *runtime.ServeMux, conn *gr
 
 // RegisterInquiryHandlerClient registers the http handlers for service Inquiry
 // to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "InquiryClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "InquiryClient"
+// Note: the gRPC framework executes interceptor within the gRPC handler. If the passed in "InquiryClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "InquiryClient" to call the correct interceptors.
+// "InquiryClient" to call the correct interceptor.
 func RegisterInquiryHandlerClient(ctx context.Context, mux *runtime.ServeMux, client InquiryClient) error {
 
 	mux.Handle("GET", pattern_Inquiry_Ping_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {

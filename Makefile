@@ -2,7 +2,7 @@ CURDIR=$(shell pwd)
 BINDIR=${CURDIR}/bin
 GOVER=$(shell go version | perl -nle '/(go\d\S+)/; print $$1;')
 SMARTIMPORTS=${BINDIR}/smartimports_${GOVER}
-LINTVER=v1.51.1
+LINTVER=v1.54.2
 LINTBIN=${BINDIR}/lint_${GOVER}_${LINTVER}
 PACKAGE=github.com/romanzimoglyad/inquiry-backend/cmd/app
 GRPC_PACKAGE=route256/loms/cmd/grpc_app
@@ -19,8 +19,8 @@ test:
 run:
 	go run ${PACKAGE}
 
-lint: install-lint
-	${LINTBIN} run
+lint:
+	golangci-lint run
 
 precommit: format build test lint
 	echo "OK"
