@@ -1,6 +1,6 @@
 module github.com/romanzimoglyad/inquiry-backend
 
-go 1.21.1
+go 1.19
 
 require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0

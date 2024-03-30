@@ -1,0 +1,6 @@
+{
+  "grpcPort": "50051",
+  "httpPort": "8082",
+  "logLevel": 1,
+  "env": "development",
+}

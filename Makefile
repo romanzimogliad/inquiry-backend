@@ -9,10 +9,8 @@ GRPC_PACKAGE=route256/loms/cmd/grpc_app
 all: format build test lint
 
 build: bindir
-	go build -o ${BINDIR}/app ${PACKAGE}
+	env GOOS=linux go build -o ${BINDIR}/app ${PACKAGE}
 
-build_grpc: bindir
-	go build -o ${BINDIR}/grpc_app ${GRPC_PACKAGE}
 test:
 	go test ./...
 
@@ -40,3 +38,7 @@ generate:
 	--go-grpc_out ./pb/api_v1 --go-grpc_opt=paths=source_relative \
 	--grpc-gateway_out ./pb/api_v1 --grpc-gateway_opt paths=source_relative \
 	api/v1/api.proto
+
+
+run-all: build
+	sudo docker compose up --force-recreate --build

@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"os"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -28,8 +29,14 @@ type Struct struct {
 var Config Struct
 
 func Init() {
-	err := cleanenv.ReadConfig("config.yml", &Config)
+	filePath := "config.yml"
+	if os.Getenv("ENV") == "local" {
+		filePath = "config_local.yml"
+	}
+	err := cleanenv.ReadConfig(filePath, &Config)
+
 	if err != nil {
 		log.Fatalf("failed to read config: %v", err)
 	}
+
 }
