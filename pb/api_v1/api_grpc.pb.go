@@ -24,6 +24,10 @@ const _ = grpc.SupportPackageIsVersion7
 type InquiryClient interface {
 	// Ping
 	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
+	// Create lesson
+	CreateLesson(ctx context.Context, in *CreateLessonRequest, opts ...grpc.CallOption) (*CreateLessonResponse, error)
+	// Create ListLessons
+	ListLessons(ctx context.Context, in *ListLessonsRequest, opts ...grpc.CallOption) (*ListLessonsResponse, error)
 }
 
 type inquiryClient struct {
@@ -43,12 +47,34 @@ func (c *inquiryClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.
 	return out, nil
 }
 
+func (c *inquiryClient) CreateLesson(ctx context.Context, in *CreateLessonRequest, opts ...grpc.CallOption) (*CreateLessonResponse, error) {
+	out := new(CreateLessonResponse)
+	err := c.cc.Invoke(ctx, "/inquiry.Inquiry/CreateLesson", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *inquiryClient) ListLessons(ctx context.Context, in *ListLessonsRequest, opts ...grpc.CallOption) (*ListLessonsResponse, error) {
+	out := new(ListLessonsResponse)
+	err := c.cc.Invoke(ctx, "/inquiry.Inquiry/ListLessons", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // InquiryServer is the server API for Inquiry service.
 // All implementations must embed UnimplementedInquiryServer
 // for forward compatibility
 type InquiryServer interface {
 	// Ping
 	Ping(context.Context, *PingRequest) (*PingResponse, error)
+	// Create lesson
+	CreateLesson(context.Context, *CreateLessonRequest) (*CreateLessonResponse, error)
+	// Create ListLessons
+	ListLessons(context.Context, *ListLessonsRequest) (*ListLessonsResponse, error)
 	mustEmbedUnimplementedInquiryServer()
 }
 
@@ -58,6 +84,12 @@ type UnimplementedInquiryServer struct {
 
 func (UnimplementedInquiryServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
+}
+func (UnimplementedInquiryServer) CreateLesson(context.Context, *CreateLessonRequest) (*CreateLessonResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateLesson not implemented")
+}
+func (UnimplementedInquiryServer) ListLessons(context.Context, *ListLessonsRequest) (*ListLessonsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListLessons not implemented")
 }
 func (UnimplementedInquiryServer) mustEmbedUnimplementedInquiryServer() {}
 
@@ -90,6 +122,42 @@ func _Inquiry_Ping_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Inquiry_CreateLesson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateLessonRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InquiryServer).CreateLesson(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/inquiry.Inquiry/CreateLesson",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InquiryServer).CreateLesson(ctx, req.(*CreateLessonRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Inquiry_ListLessons_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListLessonsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InquiryServer).ListLessons(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/inquiry.Inquiry/ListLessons",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InquiryServer).ListLessons(ctx, req.(*ListLessonsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Inquiry_ServiceDesc is the grpc.ServiceDesc for Inquiry service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +168,14 @@ var Inquiry_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Ping",
 			Handler:    _Inquiry_Ping_Handler,
+		},
+		{
+			MethodName: "CreateLesson",
+			Handler:    _Inquiry_CreateLesson_Handler,
+		},
+		{
+			MethodName: "ListLessons",
+			Handler:    _Inquiry_ListLessons_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS lesson;
+DROP TABLE IF EXISTS "user";
+DROP TABLE IF EXISTS material;
+DROP TABLE IF EXISTS material_type;
+DROP TABLE IF EXISTS material_to_lesson;
+DROP TABLE IF EXISTS grade;
+DROP TABLE IF EXISTS subject;

@@ -3,4 +3,11 @@
   "httpPort": "8082",
   "logLevel": 1,
   "env": "development",
+  "database": {
+      "name":"inquiry",
+      "user":"user",
+      "password":"password",
+      "host":"pg_inquiry",
+      "port": 5432
+  }
 }

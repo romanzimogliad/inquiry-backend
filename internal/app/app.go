@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/romanzimoglyad/inquiry-backend/internal/domain"
+
 	"github.com/romanzimoglyad/inquiry-backend/internal/interceptor"
 
 	"github.com/romanzimoglyad/inquiry-backend/internal/logger"
@@ -14,7 +16,7 @@ import (
 	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/romanzimoglyad/inquiry-backend/internal/config"
-	"github.com/romanzimoglyad/inquiry-backend/internal/service"
+	"github.com/romanzimoglyad/inquiry-backend/internal/grpc_service"
 	inquiry "github.com/romanzimoglyad/inquiry-backend/pb/api_v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -22,22 +24,22 @@ import (
 )
 
 type App struct {
-	*service.Implementation
+	*grpc_service.Implementation
 	grpcServer *grpc.Server
 	httpServer *http.Server
 }
 
-func NewApp() *App {
+func NewApp(service *domain.InquiryService) *App {
 	a := &App{}
-	a.initDeps()
+	a.initDeps(service)
 	return a
 }
 
-func (a *App) initDeps() {
-	a.initGRPCServer()
+func (a *App) initDeps(service *domain.InquiryService) {
+	a.initGRPCServer(service)
 }
 
-func (a *App) initGRPCServer() {
+func (a *App) initGRPCServer(service *domain.InquiryService) {
 	s := grpc.NewServer(
 		grpc.UnaryInterceptor(
 			grpcMiddleware.ChainUnaryServer(interceptor.LoggingInterceptor),
@@ -46,7 +48,7 @@ func (a *App) initGRPCServer() {
 
 	reflection.Register(s)
 
-	inquiry.RegisterInquiryServer(s, service.NewInquiryV1())
+	inquiry.RegisterInquiryServer(s, grpc_service.NewInquiryV1(service))
 	a.grpcServer = s
 }
 
@@ -69,10 +71,11 @@ func (a *App) RunHTTPServer() {
 	if err != nil {
 		logger.Fatal().Msgf("Failed to register gateway: %v", err)
 	}
+	handler := interceptor.CorsMiddleware(gwmux)
 
 	a.httpServer = &http.Server{
 		Addr:              fmt.Sprintf(":%s", config.Config.HttpPort),
-		Handler:           gwmux,
+		Handler:           handler,
 		ReadHeaderTimeout: 100 * time.Millisecond,
 	}
 	logger.Info().Msgf("Serving gRPC-Gateway on: %s", config.Config.HttpPort)

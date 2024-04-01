@@ -33,7 +33,7 @@ install-lint: bindir
 		(GOBIN=${BINDIR} go install github.com/golangci/golangci-lint/cmd/golangci-lint@${LINTVER} && \
 		mv ${BINDIR}/golangci-lint ${LINTBIN})
 generate:
-	protoc -I api/v1 -I ${GOPATH}/pkg/mod/github.com/grpc-ecosystem/grpc-gateway@v1.16.0/third_party/googleapis/ \
+	protoc -I api/v1 -I ${GOPATH}/pkg/mod/github.com/grpc-ecosystem/grpc-gateway@v1.16.0/third_party/googleapis/ -I ${GOPATH}/pkg/mod/github.com/envoyproxy/protoc-gen-validate@v0.6.7/ \
 	--go_out ./pb/api_v1 --go_opt=paths=source_relative \
 	--go-grpc_out ./pb/api_v1 --go-grpc_opt=paths=source_relative \
 	--grpc-gateway_out ./pb/api_v1 --grpc-gateway_opt paths=source_relative \

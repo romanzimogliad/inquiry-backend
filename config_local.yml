@@ -1,6 +1,13 @@
 {
-  "grpcPort": "50051",
-  "httpPort": "8082",
+  "grpcPort": "50055",
+  "httpPort": "8085",
   "logLevel": 1,
   "env": "development",
+  "database": {
+    "name": "inquiry",
+    "user": "user",
+    "password": "password",
+    "host": "localhost",
+    "port": 5437
+  }
 }
