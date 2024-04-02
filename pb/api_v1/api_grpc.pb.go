@@ -26,8 +26,11 @@ type InquiryClient interface {
 	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
 	// Create lesson
 	CreateLesson(ctx context.Context, in *CreateLessonRequest, opts ...grpc.CallOption) (*CreateLessonResponse, error)
-	// Create ListLessons
+	// List Lessons
 	ListLessons(ctx context.Context, in *ListLessonsRequest, opts ...grpc.CallOption) (*ListLessonsResponse, error)
+	// List Subjects
+	ListSubjects(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListSubjectsResponse, error)
+	ListDictionary(ctx context.Context, in *ListDictionaryRequest, opts ...grpc.CallOption) (*ListDictionaryResponse, error)
 }
 
 type inquiryClient struct {
@@ -65,6 +68,24 @@ func (c *inquiryClient) ListLessons(ctx context.Context, in *ListLessonsRequest,
 	return out, nil
 }
 
+func (c *inquiryClient) ListSubjects(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListSubjectsResponse, error) {
+	out := new(ListSubjectsResponse)
+	err := c.cc.Invoke(ctx, "/inquiry.Inquiry/ListSubjects", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *inquiryClient) ListDictionary(ctx context.Context, in *ListDictionaryRequest, opts ...grpc.CallOption) (*ListDictionaryResponse, error) {
+	out := new(ListDictionaryResponse)
+	err := c.cc.Invoke(ctx, "/inquiry.Inquiry/ListDictionary", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // InquiryServer is the server API for Inquiry service.
 // All implementations must embed UnimplementedInquiryServer
 // for forward compatibility
@@ -73,8 +94,11 @@ type InquiryServer interface {
 	Ping(context.Context, *PingRequest) (*PingResponse, error)
 	// Create lesson
 	CreateLesson(context.Context, *CreateLessonRequest) (*CreateLessonResponse, error)
-	// Create ListLessons
+	// List Lessons
 	ListLessons(context.Context, *ListLessonsRequest) (*ListLessonsResponse, error)
+	// List Subjects
+	ListSubjects(context.Context, *Empty) (*ListSubjectsResponse, error)
+	ListDictionary(context.Context, *ListDictionaryRequest) (*ListDictionaryResponse, error)
 	mustEmbedUnimplementedInquiryServer()
 }
 
@@ -90,6 +114,12 @@ func (UnimplementedInquiryServer) CreateLesson(context.Context, *CreateLessonReq
 }
 func (UnimplementedInquiryServer) ListLessons(context.Context, *ListLessonsRequest) (*ListLessonsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListLessons not implemented")
+}
+func (UnimplementedInquiryServer) ListSubjects(context.Context, *Empty) (*ListSubjectsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListSubjects not implemented")
+}
+func (UnimplementedInquiryServer) ListDictionary(context.Context, *ListDictionaryRequest) (*ListDictionaryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDictionary not implemented")
 }
 func (UnimplementedInquiryServer) mustEmbedUnimplementedInquiryServer() {}
 
@@ -158,6 +188,42 @@ func _Inquiry_ListLessons_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Inquiry_ListSubjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InquiryServer).ListSubjects(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/inquiry.Inquiry/ListSubjects",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InquiryServer).ListSubjects(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Inquiry_ListDictionary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDictionaryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InquiryServer).ListDictionary(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/inquiry.Inquiry/ListDictionary",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InquiryServer).ListDictionary(ctx, req.(*ListDictionaryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Inquiry_ServiceDesc is the grpc.ServiceDesc for Inquiry service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +242,14 @@ var Inquiry_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListLessons",
 			Handler:    _Inquiry_ListLessons_Handler,
+		},
+		{
+			MethodName: "ListSubjects",
+			Handler:    _Inquiry_ListSubjects_Handler,
+		},
+		{
+			MethodName: "ListDictionary",
+			Handler:    _Inquiry_ListDictionary_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -14,8 +14,8 @@ import (
 func (d *Database) CreateLesson(ctx context.Context, lesson *domain.Lesson) (int32, error) {
 	var lessonId int32
 
-	query, args, err := sq.Insert(model.LessonTableName.String()).Columns("name", "user_id", "description", "grade_id", "subject_id").PlaceholderFormat(sq.Dollar).
-		Values(lesson.Name, lesson.UserId, lesson.Description, lesson.GradeId, lesson.SubjectId).Suffix("RETURNING id").ToSql()
+	query, args, err := sq.Insert(model.LessonTableName.String()).Columns("name", "unit_id", "text", "duration", "user_id", "description", "grade_id", "subject_id", "image_id", "concept_id", "skill_id").PlaceholderFormat(sq.Dollar).
+		Values(lesson.Name, lesson.Unit.Id, lesson.Text, lesson.Duration, lesson.UserId, lesson.Description, lesson.GradeId, lesson.Subject.Id, lesson.ImageId, lesson.Concept.Id, lesson.Skill.Id).Suffix("RETURNING id").ToSql()
 	if err != nil {
 		return 0, fmt.Errorf("error in inserting lesson : %w", err)
 	}
