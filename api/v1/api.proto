@@ -29,6 +29,13 @@ service Inquiry {
       body: "*"
     };
   };
+  // Get Lesson
+  rpc GetLesson (GetLessonRequest) returns (GetLessonResponse) {
+    option (google.api.http) = {
+      post: "/lesson"
+      body: "*"
+    };
+  };
   // List Subjects
   rpc ListSubjects (Empty) returns (ListSubjectsResponse) {
     option (google.api.http) = {
@@ -42,6 +49,23 @@ service Inquiry {
       body: "*"
         };
   };
+}
+
+
+message GetLessonRequest {
+  int64 user_id = 1;
+  string id = 2;
+}
+
+message GetLessonResponse {
+  Lesson lesson = 1;
+  repeated Material materials = 2;
+}
+
+message Material {
+  int64 id = 1;
+  int64 type_id = 2;
+  bytes data = 3;
 }
 
 message ListDictionaryRequest{
@@ -79,6 +103,7 @@ message ListLessonsRequest {
     int32 unit_id = 2;
     int32 concept_id = 3;
     int32 skill_id = 4;
+    string search_text = 5;
   }
 }
 message ListLessonsResponse{
@@ -100,7 +125,7 @@ message CreateLessonRequest {
 }
 
 message Lesson {
-  int32 id = 1;
+  string id = 1;
   IdName unit = 2;
   string name = 3;
   string text = 4;
@@ -117,7 +142,7 @@ message Lesson {
 
 
 message CreateLessonResponse {
-  int32 id = 1;
+  string id = 1;
 }
 
 message PingRequest {

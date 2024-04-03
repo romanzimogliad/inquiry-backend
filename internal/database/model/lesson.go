@@ -7,7 +7,7 @@ import (
 )
 
 type Lesson struct {
-	Id          int32     `db:"id"`
+	Id          string    `db:"id"`
 	Name        string    `db:"name"`
 	UnitId      int32     `db:"unit_id"`
 	UnitName    string    `db:"unit_name"`

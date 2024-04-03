@@ -14,10 +14,11 @@ import (
 // ListLessons list lessons
 func (i *Implementation) ListLessons(ctx context.Context, request *inquiry.ListLessonsRequest) (*inquiry.ListLessonsResponse, error) {
 	lessons, err := i.inquiryService.ListLessons(ctx, &domain.ListLessonsRequest{UserId: request.GetUserId(), Filter: domain.Filter{
-		SubjectId: request.GetFilter().GetSubjectId(),
-		ConceptId: request.GetFilter().GetConceptId(),
-		UnitId:    request.GetFilter().GetUnitId(),
-		SkillId:   request.GetFilter().GetSkillId(),
+		SubjectId:  request.GetFilter().GetSubjectId(),
+		ConceptId:  request.GetFilter().GetConceptId(),
+		UnitId:     request.GetFilter().GetUnitId(),
+		SkillId:    request.GetFilter().GetSkillId(),
+		SearchText: request.GetFilter().GetSearchText(),
 	}})
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "error in ListLessons: %v", err)

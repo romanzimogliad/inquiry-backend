@@ -1,5 +1,7 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE IF NOT EXISTS lesson (
-   id SERIAL PRIMARY KEY,
+   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
    name text,
    unit_id int,
    text text,
@@ -52,7 +54,7 @@ CREATE TABLE IF NOT EXISTS material_type (
 
 CREATE TABLE IF NOT EXISTS material_to_lesson (
       material_id int,
-      lesson_id int,
+      lesson_id text,
       primary key (material_id,lesson_id)
 );
 
@@ -69,7 +71,54 @@ CREATE TABLE IF NOT EXISTS subject (
 );
 
 INSERT INTO lesson  ("name", "unit_id", "text", "duration", "user_id", "description", "grade_id", "subject_id", "image_id","concept_id","skill_id") VALUES
-                    ('How to count',1,'Here we will learn how to count,find everything that is hidden, open the bounderies',60,1,'Here we will learn how to count by throwing a ball',5,1,1,1,1),
+                    ('How to count',1,'Title: Exploring Geometric Shapes
+
+Lesson Overview:
+In this engaging math lesson, students will delve into the fascinating world of geometric shapes. Through a series of interactive activities and hands-on explorations, they will develop a deeper understanding of fundamental geometric concepts and their applications in real-world scenarios.
+
+Objective:
+
+To introduce students to various geometric shapes and their properties.
+To foster critical thinking and problem-solving skills through exploratory learning.
+To encourage collaboration and communication among peers.
+Lesson Content:
+
+Introduction to Geometric Shapes:
+
+Definition of geometric shapes.
+Classification of shapes based on sides and angles.
+Examples of common geometric shapes such as triangles, quadrilaterals, circles, and polygons.
+Properties of Geometric Shapes:
+
+Identification of key properties including sides, angles, and diagonals.
+Exploration of symmetry, congruence, and similarity.
+Investigation of special properties of specific shapes (e.g., equilateral triangles, rectangles).
+Exploring 2D and 3D Shapes:
+
+Differentiation between two-dimensional (2D) and three-dimensional (3D) shapes.
+Visualization of 3D shapes through models and diagrams.
+Discussion on volume, surface area, and other attributes of 3D shapes.
+Practical Applications:
+
+Real-life examples showcasing the use of geometric shapes in architecture, art, and design.
+Problem-solving tasks involving geometric concepts (e.g., calculating areas, constructing shapes).
+Activities:
+
+Shape Scavenger Hunt:
+
+Students search the classroom for various objects that represent different geometric shapes. They classify each object and discuss their findings.
+Geometry Art Project:
+
+Students create artwork using geometric shapes as building blocks. They apply their knowledge of shapes, symmetry, and patterns to design visually appealing compositions.
+Mathematical Puzzles and Challenges:
+
+Students work in groups to solve mathematical puzzles and challenges related to geometric shapes. They apply problem-solving strategies and share their solutions with the class.
+Assessment:
+
+Formative assessment through class discussions, observations, and student presentations.
+Summative assessment through quizzes, worksheets, and project evaluations.
+Conclusion:
+By the end of this lesson, students will have gained a solid foundation in geometric concepts and their practical applications. They will be equipped with essential skills to analyze, interpret, and manipulate geometric shapes, paving the way for further exploration in the field of mathematics.',60,1,'Here we will learn how to count by throwing a ball',5,1,1,1,1),
                     ('How to count',1,'Here we will learn how to count,find everything that is hidden, open the bounderies',60,1,'Here we will learn how to count by throwing a ball',5,1,1,1,1),
                     ('How to count',1,'Here we will learn how to count,find everything that is hidden, open the bounderies',60,1,'Here we will learn how to count by throwing a ball',5,1,1,1,1),
                     ('How to count',1,'Here we will learn how to count,find everything that is hidden, open the bounderies',60,1,'Here we will learn how to count by throwing a ball',5,1,1,1,1),

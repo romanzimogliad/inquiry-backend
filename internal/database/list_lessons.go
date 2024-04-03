@@ -54,5 +54,9 @@ func withFilters(filter domain.Filter, builder sq.SelectBuilder) sq.SelectBuilde
 	if filter.UnitId != 0 {
 		builder = builder.Where(sq.Eq{"unit_id": filter.UnitId})
 	}
+	if filter.SearchText != "" {
+		builder = builder.Where(sq.Like{"lesson.name": "%" + filter.SearchText + "%"})
+	}
+	builder = builder.OrderBy("created_at desc")
 	return builder
 }

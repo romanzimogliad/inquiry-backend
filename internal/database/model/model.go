@@ -7,9 +7,10 @@ func (t TableName) String() string {
 }
 
 const (
-	LessonTableName  TableName = "lesson"
-	SubjectTableName TableName = "subject"
-	ConceptTableName TableName = "concept"
-	SkillTableName   TableName = "skill"
-	UnitTableName    TableName = "unit"
+	LessonTableName           TableName = "lesson"
+	SubjectTableName          TableName = "subject"
+	ConceptTableName          TableName = "concept"
+	SkillTableName            TableName = "skill"
+	UnitTableName             TableName = "unit"
+	MaterialToLessonTableName TableName = "material_to_lesson"
 )

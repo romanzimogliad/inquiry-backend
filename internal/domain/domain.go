@@ -12,8 +12,9 @@ type InquiryService struct {
 
 type Database interface {
 	Ping(ctx context.Context) (string, error)
-	CreateLesson(ctx context.Context, lesson *domain.Lesson) (int32, error)
+	CreateLesson(ctx context.Context, lesson *domain.Lesson) (string, error)
 	ListLessons(ctx context.Context, lesson *domain.ListLessonsRequest) ([]*domain.Lesson, error)
+	GetLesson(ctx context.Context, lesson *domain.GetLessonsRequest) (*domain.Lesson, error)
 	ListSubjects(ctx context.Context) ([]*domain.Subject, error)
 	ListDictionary(ctx context.Context, dictionaryType domain.DictionaryType) ([]*domain.IdName, error)
 }

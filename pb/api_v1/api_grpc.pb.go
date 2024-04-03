@@ -28,6 +28,8 @@ type InquiryClient interface {
 	CreateLesson(ctx context.Context, in *CreateLessonRequest, opts ...grpc.CallOption) (*CreateLessonResponse, error)
 	// List Lessons
 	ListLessons(ctx context.Context, in *ListLessonsRequest, opts ...grpc.CallOption) (*ListLessonsResponse, error)
+	// Get Lesson
+	GetLesson(ctx context.Context, in *GetLessonRequest, opts ...grpc.CallOption) (*GetLessonResponse, error)
 	// List Subjects
 	ListSubjects(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListSubjectsResponse, error)
 	ListDictionary(ctx context.Context, in *ListDictionaryRequest, opts ...grpc.CallOption) (*ListDictionaryResponse, error)
@@ -68,6 +70,15 @@ func (c *inquiryClient) ListLessons(ctx context.Context, in *ListLessonsRequest,
 	return out, nil
 }
 
+func (c *inquiryClient) GetLesson(ctx context.Context, in *GetLessonRequest, opts ...grpc.CallOption) (*GetLessonResponse, error) {
+	out := new(GetLessonResponse)
+	err := c.cc.Invoke(ctx, "/inquiry.Inquiry/GetLesson", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *inquiryClient) ListSubjects(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListSubjectsResponse, error) {
 	out := new(ListSubjectsResponse)
 	err := c.cc.Invoke(ctx, "/inquiry.Inquiry/ListSubjects", in, out, opts...)
@@ -96,6 +107,8 @@ type InquiryServer interface {
 	CreateLesson(context.Context, *CreateLessonRequest) (*CreateLessonResponse, error)
 	// List Lessons
 	ListLessons(context.Context, *ListLessonsRequest) (*ListLessonsResponse, error)
+	// Get Lesson
+	GetLesson(context.Context, *GetLessonRequest) (*GetLessonResponse, error)
 	// List Subjects
 	ListSubjects(context.Context, *Empty) (*ListSubjectsResponse, error)
 	ListDictionary(context.Context, *ListDictionaryRequest) (*ListDictionaryResponse, error)
@@ -114,6 +127,9 @@ func (UnimplementedInquiryServer) CreateLesson(context.Context, *CreateLessonReq
 }
 func (UnimplementedInquiryServer) ListLessons(context.Context, *ListLessonsRequest) (*ListLessonsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListLessons not implemented")
+}
+func (UnimplementedInquiryServer) GetLesson(context.Context, *GetLessonRequest) (*GetLessonResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLesson not implemented")
 }
 func (UnimplementedInquiryServer) ListSubjects(context.Context, *Empty) (*ListSubjectsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListSubjects not implemented")
@@ -188,6 +204,24 @@ func _Inquiry_ListLessons_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Inquiry_GetLesson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLessonRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InquiryServer).GetLesson(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/inquiry.Inquiry/GetLesson",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InquiryServer).GetLesson(ctx, req.(*GetLessonRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Inquiry_ListSubjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
@@ -242,6 +276,10 @@ var Inquiry_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListLessons",
 			Handler:    _Inquiry_ListLessons_Handler,
+		},
+		{
+			MethodName: "GetLesson",
+			Handler:    _Inquiry_GetLesson_Handler,
 		},
 		{
 			MethodName: "ListSubjects",
