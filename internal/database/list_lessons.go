@@ -12,11 +12,12 @@ import (
 )
 
 func (d *Database) ListLessons(ctx context.Context, request *domain.ListLessonsRequest) ([]*domain.Lesson, error) {
-	builder := sq.Select("lesson.*," +
-		"subject.name as subject_name," +
-		"unit.name as unit_name, " +
-		"concept.name as concept_name, " +
-		"skill.name as skill_name").From(model.LessonTableName.String()).PlaceholderFormat(sq.Dollar).
+
+	builder := sq.Select("lesson.*,"+
+		"subject.name as subject_name,"+
+		"unit.name as unit_name, "+
+		"concept.name as concept_name, "+
+		"skill.name as skill_name", " STRING_AGG(material_to_lesson.material_id, ',') AS material_ids").From(model.LessonTableName.String()).PlaceholderFormat(sq.Dollar).
 		LeftJoin(model.SubjectTableName.String() + " ON " +
 			model.LessonTableName.String() + ".subject_id" + " = " + model.SubjectTableName.String() + ".id").
 		LeftJoin(model.UnitTableName.String() + " ON " +
@@ -25,6 +26,11 @@ func (d *Database) ListLessons(ctx context.Context, request *domain.ListLessonsR
 			model.LessonTableName.String() + ".concept_id" + " = " + model.ConceptTableName.String() + ".id").
 		LeftJoin(model.SkillTableName.String() + " ON " +
 			model.LessonTableName.String() + ".skill_id" + " = " + model.SkillTableName.String() + ".id").
+		LeftJoin(model.MaterialToLessonTableName.String() + " ON " + model.LessonTableName.String() + ".id::TEXT" + " = " + model.MaterialToLessonTableName.String() + ".lesson_id").
+		GroupBy("lesson.id," +
+			"subject.name,unit.name," +
+			"concept.name," +
+			"skill.name").
 		Where(sq.Eq{"user_id": request.UserId})
 
 	query, args, err := withFilters(request.Filter, builder).ToSql()

@@ -9,5 +9,9 @@
     "password": "password",
     "host": "localhost",
     "port": 5437
+  },
+  "s3": {
+    "region": "ap-northeast-1",
+      "bucket":"rvz-inquiry"
   }
 }

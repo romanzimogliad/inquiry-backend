@@ -53,20 +53,14 @@ service Inquiry {
 
 
 message GetLessonRequest {
-  int64 user_id = 1;
+  int32 user_id = 1;
   string id = 2;
 }
 
 message GetLessonResponse {
   Lesson lesson = 1;
-  repeated Material materials = 2;
 }
 
-message Material {
-  int64 id = 1;
-  int64 type_id = 2;
-  bytes data = 3;
-}
 
 message ListDictionaryRequest{
   Type type = 1;
@@ -95,7 +89,7 @@ message IdName {
 }
 
 message ListLessonsRequest {
-  int64 user_id = 1;
+  int32 user_id = 1;
   Filter filter = 2;
 
   message Filter {
@@ -115,13 +109,22 @@ message CreateLessonRequest {
   int32 unit_id = 2 [(validate.rules).int64.gt = 0];
   string text = 3;
   int32 duration = 4;
-  int64 user_id = 5 [(validate.rules).int64.gt = 0];
+  int32 user_id = 5 [(validate.rules).int64.gt = 0];
   string description = 6;
   int32 grade_id = 7 [(validate.rules).int32.gt = 0];
   int32 subject_id = 8 [(validate.rules).int32.gt = 0];
   string image_id = 9;
   int32 concept_id = 10 [(validate.rules).int64.gt = 0];
   int32 skill_id = 11 [(validate.rules).int64.gt = 0];
+  File image = 12;
+  repeated File files = 13;
+}
+
+message File {
+  string name = 1;
+  string type = 2;
+  bytes data = 3 ;
+  string url = 4;
 }
 
 message Lesson {
@@ -130,14 +133,15 @@ message Lesson {
   string name = 3;
   string text = 4;
   int32 duration = 5;
-  int64 user_id = 6;
+  int32 user_id = 6;
   string description = 7;
   int32 grade_id = 8;
   IdName subject = 9;
   string created_at = 10;
-  int64 image_id = 11;
+  File image = 11;
   IdName concept = 12 ;
   IdName skill = 13;
+  repeated File materials =14;
 }
 
 

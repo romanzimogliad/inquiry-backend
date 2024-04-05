@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/romanzimoglyad/inquiry-backend/internal/file_storage"
+
 	"github.com/romanzimoglyad/inquiry-backend/internal/domain"
 
 	"github.com/romanzimoglyad/inquiry-backend/internal/database"
@@ -35,9 +37,12 @@ func main() {
 		logger.Fatal().Msgf("Unable to create connection pool: %v\n", err)
 	}
 	defer dbpool.Close()
-
+	s3, err := file_storage.NewS3()
+	if err != nil {
+		logger.Fatal().Msgf("Unable to create file storage client: %v\n", err)
+	}
 	database := database.New(dbpool)
-	inquiryService := domain.New(database)
+	inquiryService := domain.New(database, s3)
 
 	app := app.NewApp(inquiryService)
 	app.RunGrpcServer()

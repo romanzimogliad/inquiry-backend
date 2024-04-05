@@ -9,5 +9,10 @@
       "password":"password",
       "host":"pg_inquiry",
       "port": 5432
+  },
+  "s3": {
+    "region":"ap-northeast-1",
+    "bucket":"rvz-inquiry"
   }
+
 }

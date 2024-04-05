@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strings"
 	"time"
 
 	"github.com/romanzimoglyad/inquiry-backend/internal/domain/domain"
@@ -13,17 +14,18 @@ type Lesson struct {
 	UnitName    string    `db:"unit_name"`
 	Text        string    `db:"text"`
 	Duration    int32     `db:"duration"`
-	UserId      int64     `db:"user_id"`
+	UserId      int32     `db:"user_id"`
 	Description string    `db:"description"`
 	GradeId     int32     `db:"grade_id"`
 	SubjectId   int32     `db:"subject_id"`
 	SubjectName string    `db:"subject_name"`
-	ImageId     int64     `db:"image_id"`
+	ImageKey    *string   `db:"image_key"`
 	CreatedAt   time.Time `db:"created_at"`
 	ConceptId   int32     `db:"concept_id"`
 	ConceptName string    `db:"concept_name"`
 	SkillId     int32     `db:"skill_id"`
 	SkillName   string    `db:"skill_name"`
+	Materials   *string   `db:"material_ids"`
 }
 
 type Lessons []*Lesson
@@ -37,7 +39,8 @@ func (l *Lessons) ToDomain() []*domain.Lesson {
 }
 
 func (l *Lesson) ToDomain() *domain.Lesson {
-	return &domain.Lesson{
+
+	lesson := &domain.Lesson{
 		Id: l.Id,
 		Unit: &domain.IdName{
 			Id:   l.UnitId,
@@ -54,7 +57,7 @@ func (l *Lesson) ToDomain() *domain.Lesson {
 			Name: l.SubjectName,
 		},
 		CreatedAt: l.CreatedAt,
-		ImageId:   l.ImageId,
+
 		Concept: &domain.IdName{
 			Id:   l.ConceptId,
 			Name: l.ConceptName,
@@ -64,4 +67,17 @@ func (l *Lesson) ToDomain() *domain.Lesson {
 			Name: l.SkillName,
 		},
 	}
+	if l.ImageKey != nil {
+		lesson.Image = &domain.File{Name: *l.ImageKey}
+	}
+	if l.Materials != nil {
+
+		materialNames := strings.Split(*l.Materials, ",")
+		materials := make([]*domain.File, len(materialNames))
+		for i := range materialNames {
+			materials[i] = &domain.File{Name: materialNames[i]}
+		}
+		lesson.Files = materials
+	}
+	return lesson
 }

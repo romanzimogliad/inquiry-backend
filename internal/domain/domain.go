@@ -7,7 +7,8 @@ import (
 )
 
 type InquiryService struct {
-	database Database
+	database    Database
+	fileStorage FileStorage
 }
 
 type Database interface {
@@ -17,10 +18,19 @@ type Database interface {
 	GetLesson(ctx context.Context, lesson *domain.GetLessonsRequest) (*domain.Lesson, error)
 	ListSubjects(ctx context.Context) ([]*domain.Subject, error)
 	ListDictionary(ctx context.Context, dictionaryType domain.DictionaryType) ([]*domain.IdName, error)
+	UpdateLesson(ctx context.Context, lesson *domain.Lesson) error
+	AddMaterials(ctx context.Context, request *domain.AddFileRequest) error
 }
 
-func New(database Database) *InquiryService {
+type FileStorage interface {
+	Upload(file *domain.File) error
+	Download(key string) (*domain.File, error)
+	GetUrl(key string) (string, error)
+}
+
+func New(database Database, fileStorage FileStorage) *InquiryService {
 	return &InquiryService{
-		database: database,
+		database:    database,
+		fileStorage: fileStorage,
 	}
 }

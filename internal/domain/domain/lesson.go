@@ -8,15 +8,15 @@ type Lesson struct {
 	Duration    int32
 	Text        string
 	Name        string
-	UserId      int64
+	UserId      int32
 	Concept     *IdName
 	Skill       *IdName
 	Description string
 	GradeId     int32
 	Subject     *IdName
 	CreatedAt   time.Time
-	ImageId     int64
-	Materials   []Material
+	Image       *File
+	Files       []*File
 }
 type Filter struct {
 	SubjectId  int32
@@ -27,11 +27,11 @@ type Filter struct {
 }
 
 type ListLessonsRequest struct {
-	UserId int64
+	UserId int32
 	Filter Filter
 }
 
 type GetLessonsRequest struct {
-	UserId int64
+	UserId int32
 	Id     string
 }

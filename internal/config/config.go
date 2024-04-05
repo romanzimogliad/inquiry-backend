@@ -30,6 +30,12 @@ type Struct struct {
 		Host     string `yaml:"host" env:"DATABASE_HOST" env-default:"localhost"`
 		Port     uint16 `yaml:"port" env:"DATABASE_PORT" env-default:"5343"`
 	}
+	S3 struct {
+		Region string `yaml:"region" env:"S3_REGION" env-default:"ap-northeast-1"`
+		Bucket string `yaml:"bucket" env:"S3_BUCKET" env-default:"rz-inquiry"`
+		Key    string `yaml:"key" env:"AWS_ACCESS_KEY" env-default:""`
+		Secret string `yaml:"secret" env:"AWS_SECRET_KEY" env-default:""`
+	}
 }
 
 // Config configuration.
@@ -40,6 +46,7 @@ func Init() {
 	if os.Getenv("ENV") == "local" {
 		filePath = "config_local.yml"
 	}
+
 	err := cleanenv.ReadConfig(filePath, &Config)
 
 	if err != nil {
