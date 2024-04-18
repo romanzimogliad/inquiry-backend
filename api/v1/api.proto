@@ -36,6 +36,13 @@ service Inquiry {
       body: "*"
     };
   };
+  // Delete Lesson
+  rpc DeleteLesson (GetLessonRequest) returns (Empty) {
+    option (google.api.http) = {
+      post: "/lesson/delete"
+      body: "*"
+    };
+  };
   // List Subjects
   rpc ListSubjects (Empty) returns (ListSubjectsResponse) {
     option (google.api.http) = {

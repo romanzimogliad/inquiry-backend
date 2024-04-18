@@ -16,6 +16,7 @@ type Database interface {
 	CreateLesson(ctx context.Context, lesson *domain.Lesson) (string, error)
 	ListLessons(ctx context.Context, lesson *domain.ListLessonsRequest) ([]*domain.Lesson, error)
 	GetLesson(ctx context.Context, lesson *domain.GetLessonsRequest) (*domain.Lesson, error)
+	DeleteLesson(ctx context.Context, lesson *domain.GetLessonsRequest) error
 	ListSubjects(ctx context.Context) ([]*domain.Subject, error)
 	ListDictionary(ctx context.Context, dictionaryType domain.DictionaryType) ([]*domain.IdName, error)
 	UpdateLesson(ctx context.Context, lesson *domain.Lesson) error
