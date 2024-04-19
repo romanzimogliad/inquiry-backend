@@ -10,7 +10,6 @@ import (
 )
 
 func (d *Database) UpdateLesson(ctx context.Context, lesson *domain.Lesson) error {
-
 	query, args, err := addFields(sq.Update(model.LessonTableName.String()).PlaceholderFormat(sq.Dollar), lesson).Where(sq.And{sq.And{sq.Eq{"id": lesson.Id}, sq.Eq{"user_id": lesson.UserId}}}).ToSql()
 
 	if err != nil {
@@ -26,9 +25,13 @@ func (d *Database) UpdateLesson(ctx context.Context, lesson *domain.Lesson) erro
 }
 
 func addFields(builder sq.UpdateBuilder, lesson *domain.Lesson) sq.UpdateBuilder {
-	if lesson.Image != nil {
-		builder = builder.Set("image_key", lesson.Image.Name)
-	}
-
+	builder = builder.Set("description", lesson.Description)
+	builder = builder.Set("text", lesson.Text)
+	builder = builder.Set("name", lesson.Name)
+	builder = builder.Set("unit_id", lesson.Unit.Id)
+	builder = builder.Set("grade_id", lesson.GradeId)
+	builder = builder.Set("subject_id", lesson.Subject.Id)
+	builder = builder.Set("concept_id", lesson.Concept.Id)
+	builder = builder.Set("skill_id", lesson.Skill.Id)
 	return builder
 }

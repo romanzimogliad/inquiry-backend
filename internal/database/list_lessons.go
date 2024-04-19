@@ -31,7 +31,7 @@ func (d *Database) ListLessons(ctx context.Context, request *domain.ListLessonsR
 			"subject.name,unit.name," +
 			"concept.name," +
 			"skill.name").
-		Where(sq.Eq{"user_id": request.UserId})
+		Where(sq.And{sq.Eq{"active": true}, sq.Eq{"user_id": request.UserId}})
 
 	query, args, err := withFilters(request.Filter, builder).ToSql()
 	if err != nil {
@@ -63,6 +63,6 @@ func withFilters(filter domain.Filter, builder sq.SelectBuilder) sq.SelectBuilde
 	if filter.SearchText != "" {
 		builder = builder.Where(sq.Like{"lesson.name": "%" + filter.SearchText + "%"})
 	}
-	builder = builder.OrderBy("created_at desc")
+	builder = builder.OrderBy("updated_at desc")
 	return builder
 }

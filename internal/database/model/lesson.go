@@ -21,11 +21,13 @@ type Lesson struct {
 	SubjectName string    `db:"subject_name"`
 	ImageKey    *string   `db:"image_key"`
 	CreatedAt   time.Time `db:"created_at"`
+	UpdatedAd   time.Time `db:"updated_at"`
 	ConceptId   int32     `db:"concept_id"`
 	ConceptName string    `db:"concept_name"`
 	SkillId     int32     `db:"skill_id"`
 	SkillName   string    `db:"skill_name"`
 	Materials   *string   `db:"material_ids"`
+	Active      bool      `db:"active"`
 }
 
 type Lessons []*Lesson

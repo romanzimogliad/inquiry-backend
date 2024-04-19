@@ -160,10 +160,18 @@ func (a *App) uploadHandler(w http.ResponseWriter, r *http.Request, pathParams m
 		newFile.Data = content
 		domainFiles = append(domainFiles, newFile)
 	}
+	oldFiles := r.MultipartForm.Value["oldFiles"]
+	oldDomainFiles := make([]string, 0, len(oldFiles))
+
+	for _, oldFile := range oldFiles {
+
+		oldDomainFiles = append(oldDomainFiles, oldFile)
+	}
 
 	orderId, err := a.service.HandleFiles(r.Context(), &domainModel.AddFileRequest{
 		UserId:   request.UserId,
 		LessonId: request.LessonId,
+		OldFiles: oldDomainFiles,
 		Files:    domainFiles,
 		Img:      imgFile,
 	})

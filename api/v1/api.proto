@@ -16,9 +16,17 @@ service Inquiry {
     };
   };
   // Create lesson
-  rpc CreateLesson (CreateLessonRequest) returns (CreateLessonResponse) {
+  rpc CreateLesson (LessonRequest) returns (CreateLessonResponse) {
     option (google.api.http) = {
       post: "/lesson/create"
+      body: "*"
+    };
+  };
+
+  // Update lesson
+  rpc UpdateLesson (LessonRequest) returns (Empty) {
+    option (google.api.http) = {
+      post: "/lesson/update"
       body: "*"
     };
   };
@@ -111,20 +119,21 @@ message ListLessonsResponse{
   repeated Lesson lessons =1;
 }
 
-message CreateLessonRequest {
-  string name = 1 [(validate.rules).string.min_len = 1];
-  int32 unit_id = 2 [(validate.rules).int64.gt = 0];
-  string text = 3;
-  int32 duration = 4;
-  int32 user_id = 5 [(validate.rules).int64.gt = 0];
-  string description = 6;
-  int32 grade_id = 7 [(validate.rules).int32.gt = 0];
-  int32 subject_id = 8 [(validate.rules).int32.gt = 0];
-  string image_id = 9;
-  int32 concept_id = 10 [(validate.rules).int64.gt = 0];
-  int32 skill_id = 11 [(validate.rules).int64.gt = 0];
-  File image = 12;
-  repeated File files = 13;
+message LessonRequest {
+  string id = 1 [(validate.rules).string.min_len = 1];
+  string name = 2 [(validate.rules).string.min_len = 1];
+  int32 unit_id = 3 [(validate.rules).int64.gt = 0];
+  string text = 4;
+  int32 duration = 5;
+  int32 user_id = 6 [(validate.rules).int64.gt = 0];
+  string description = 7;
+  int32 grade_id = 8 [(validate.rules).int32.gt = 0];
+  int32 subject_id = 9 [(validate.rules).int32.gt = 0];
+  string image_id = 10;
+  int32 concept_id = 11 [(validate.rules).int64.gt = 0];
+  int32 skill_id = 12 [(validate.rules).int64.gt = 0];
+  File image = 13;
+  repeated File files = 14;
 }
 
 message File {

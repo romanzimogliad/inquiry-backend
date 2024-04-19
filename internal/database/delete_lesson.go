@@ -12,8 +12,8 @@ import (
 
 // DeleteLesson delete lesson from database
 func (d *Database) DeleteLesson(ctx context.Context, request *domain.GetLessonsRequest) error {
-	builder := sq.Delete(model.LessonTableName.String()).PlaceholderFormat(sq.Dollar).
-		Where(sq.Eq{"id": request.Id})
+	builder := sq.Update(model.LessonTableName.String()).PlaceholderFormat(sq.Dollar).
+		Where(sq.And{sq.Eq{"id": request.Id}, sq.Eq{"active": true}}).Set("active", false)
 
 	query, args, err := builder.ToSql()
 	if err != nil {

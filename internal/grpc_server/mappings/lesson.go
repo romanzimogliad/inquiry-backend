@@ -7,8 +7,9 @@ import (
 	inquiry "github.com/romanzimoglyad/inquiry-backend/pb/api_v1"
 )
 
-func ToLesson(request *inquiry.CreateLessonRequest) *domain.Lesson {
+func ToLesson(request *inquiry.LessonRequest) *domain.Lesson {
 	return &domain.Lesson{
+		Id:          request.Id,
 		Unit:        &domain.IdName{Id: request.GetUnitId()},
 		Duration:    request.GetDuration(),
 		Text:        request.GetText(),

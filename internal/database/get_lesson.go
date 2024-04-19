@@ -31,7 +31,7 @@ func (d *Database) GetLesson(ctx context.Context, request *domain.GetLessonsRequ
 		"subject.name,unit.name," +
 		"concept.name," +
 		"skill.name").
-		Where(sq.And{sq.Eq{"user_id": request.UserId}, sq.Eq{"lesson.id": request.Id}})
+		Where(sq.And{sq.Eq{"active": true}, sq.Eq{"user_id": request.UserId}, sq.Eq{"lesson.id": request.Id}})
 
 	query, args, err := builder.ToSql()
 	if err != nil {

@@ -25,7 +25,9 @@ type InquiryClient interface {
 	// Ping
 	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
 	// Create lesson
-	CreateLesson(ctx context.Context, in *CreateLessonRequest, opts ...grpc.CallOption) (*CreateLessonResponse, error)
+	CreateLesson(ctx context.Context, in *LessonRequest, opts ...grpc.CallOption) (*CreateLessonResponse, error)
+	// Update lesson
+	UpdateLesson(ctx context.Context, in *LessonRequest, opts ...grpc.CallOption) (*Empty, error)
 	// List Lessons
 	ListLessons(ctx context.Context, in *ListLessonsRequest, opts ...grpc.CallOption) (*ListLessonsResponse, error)
 	// Get Lesson
@@ -54,9 +56,18 @@ func (c *inquiryClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.
 	return out, nil
 }
 
-func (c *inquiryClient) CreateLesson(ctx context.Context, in *CreateLessonRequest, opts ...grpc.CallOption) (*CreateLessonResponse, error) {
+func (c *inquiryClient) CreateLesson(ctx context.Context, in *LessonRequest, opts ...grpc.CallOption) (*CreateLessonResponse, error) {
 	out := new(CreateLessonResponse)
 	err := c.cc.Invoke(ctx, "/inquiry.Inquiry/CreateLesson", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *inquiryClient) UpdateLesson(ctx context.Context, in *LessonRequest, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/inquiry.Inquiry/UpdateLesson", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +126,9 @@ type InquiryServer interface {
 	// Ping
 	Ping(context.Context, *PingRequest) (*PingResponse, error)
 	// Create lesson
-	CreateLesson(context.Context, *CreateLessonRequest) (*CreateLessonResponse, error)
+	CreateLesson(context.Context, *LessonRequest) (*CreateLessonResponse, error)
+	// Update lesson
+	UpdateLesson(context.Context, *LessonRequest) (*Empty, error)
 	// List Lessons
 	ListLessons(context.Context, *ListLessonsRequest) (*ListLessonsResponse, error)
 	// Get Lesson
@@ -135,8 +148,11 @@ type UnimplementedInquiryServer struct {
 func (UnimplementedInquiryServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
 }
-func (UnimplementedInquiryServer) CreateLesson(context.Context, *CreateLessonRequest) (*CreateLessonResponse, error) {
+func (UnimplementedInquiryServer) CreateLesson(context.Context, *LessonRequest) (*CreateLessonResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateLesson not implemented")
+}
+func (UnimplementedInquiryServer) UpdateLesson(context.Context, *LessonRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateLesson not implemented")
 }
 func (UnimplementedInquiryServer) ListLessons(context.Context, *ListLessonsRequest) (*ListLessonsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListLessons not implemented")
@@ -185,7 +201,7 @@ func _Inquiry_Ping_Handler(srv interface{}, ctx context.Context, dec func(interf
 }
 
 func _Inquiry_CreateLesson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateLessonRequest)
+	in := new(LessonRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -197,7 +213,25 @@ func _Inquiry_CreateLesson_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/inquiry.Inquiry/CreateLesson",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(InquiryServer).CreateLesson(ctx, req.(*CreateLessonRequest))
+		return srv.(InquiryServer).CreateLesson(ctx, req.(*LessonRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Inquiry_UpdateLesson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LessonRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InquiryServer).UpdateLesson(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/inquiry.Inquiry/UpdateLesson",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InquiryServer).UpdateLesson(ctx, req.(*LessonRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -306,6 +340,10 @@ var Inquiry_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateLesson",
 			Handler:    _Inquiry_CreateLesson_Handler,
+		},
+		{
+			MethodName: "UpdateLesson",
+			Handler:    _Inquiry_UpdateLesson_Handler,
 		},
 		{
 			MethodName: "ListLessons",
