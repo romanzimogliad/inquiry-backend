@@ -163,6 +163,18 @@ INSERT INTO unit VALUES (0,'All'),(1,'Who we are'),(2,'Where we are in place and
                         (4,'How the world works'),
                         (5,'How we organize ourselves'),
                         (6,'Sharing the planet');
+
+INSERT INTO grade VALUES (0,'All'),(1,'1'),(2,'2'),
+                        (3,'3'),
+                        (4,'4'),
+                        (5,'5'),
+                        (6,'6'),
+                        (7,'7'),
+                        (8,'8'),
+                        (9,'9'),
+                        (10,'10'),
+                        (11,'11'),
+                        (12,'12');
 INSERT INTO skill VALUES (0,'All'),(1,'Thinking'), (2,'Communication'), (3,'Research'),
                            (4,'Self-management'),(5, 'Social');
 

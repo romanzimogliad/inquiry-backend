@@ -13,23 +13,28 @@ import (
 
 // ListLessons list lessons
 func (i *Implementation) ListLessons(ctx context.Context, request *inquiry.ListLessonsRequest) (*inquiry.ListLessonsResponse, error) {
-	lessons, err := i.inquiryService.ListLessons(ctx, &domain.ListLessonsRequest{UserId: request.GetUserId(), Filter: domain.Filter{
+	lessons, err := i.inquiryService.ListLessons(ctx, &domain.ListLessonsRequest{UserId: request.GetUserId(), Page: domain.Page{
+		Page: request.GetPage().GetPage(),
+		Size: request.GetPage().GetSize(),
+	}, Filter: domain.Filter{
 		SubjectId:  request.GetFilter().GetSubjectId(),
 		ConceptId:  request.GetFilter().GetConceptId(),
 		UnitId:     request.GetFilter().GetUnitId(),
 		SkillId:    request.GetFilter().GetSkillId(),
+		GradeId:    request.GetFilter().GetGradeId(),
 		SearchText: request.GetFilter().GetSearchText(),
 	}})
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "error in ListLessons: %v", err)
 	}
 
-	resp := make([]*inquiry.Lesson, len(lessons))
+	resp := make([]*inquiry.Lesson, len(lessons.Lessons))
 
-	for k, v := range lessons {
+	for k, v := range lessons.Lessons {
 		resp[k] = mappings.FormLesson(v)
 	}
 	return &inquiry.ListLessonsResponse{
 		Lessons: resp,
+		Count:   lessons.Count,
 	}, nil
 }

@@ -11,7 +11,7 @@ import (
 	"github.com/romanzimoglyad/inquiry-backend/internal/domain/domain"
 )
 
-func (d *Database) ListLessons(ctx context.Context, request *domain.ListLessonsRequest) ([]*domain.Lesson, error) {
+func (d *Database) ListLessons(ctx context.Context, request *domain.ListLessonsRequest) (*domain.Lessons, error) {
 
 	builder := sq.Select("lesson.*,"+
 		"subject.name as subject_name,"+
@@ -32,8 +32,9 @@ func (d *Database) ListLessons(ctx context.Context, request *domain.ListLessonsR
 			"concept.name," +
 			"skill.name").
 		Where(sq.And{sq.Eq{"active": true}, sq.Eq{"user_id": request.UserId}})
-
-	query, args, err := withFilters(request.Filter, builder).ToSql()
+	builder = withFilters(request.Filter, builder)
+	builder = withOrderBy(builder)
+	query, args, err := withOffset(request.Page, builder).ToSql()
 	if err != nil {
 		return nil, fmt.Errorf("error in selecting lessons : %w", err)
 	}
@@ -44,7 +45,22 @@ func (d *Database) ListLessons(ctx context.Context, request *domain.ListLessonsR
 		return nil, err
 	}
 
-	return lessons.ToDomain(), nil
+	builder = sq.Select("count (*)").From(model.LessonTableName.String()).PlaceholderFormat(sq.Dollar).Where(sq.And{sq.Eq{"active": true}, sq.Eq{"user_id": request.UserId}})
+	builder = withFilters(request.Filter, builder)
+	query, args, err = builder.ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("error in selecting lessons : %w", err)
+	}
+	var count int32
+	if err := pgxscan.Get(ctx, d.pool, &count, query, args...); err != nil {
+		return nil, err
+	}
+
+	return lessons.ToDomain(count), nil
+}
+func withOffset(page domain.Page, builder sq.SelectBuilder) sq.SelectBuilder {
+	builder = builder.Offset(uint64((page.Page - 1) * page.Size)).Limit(uint64(page.Size))
+	return builder
 }
 
 func withFilters(filter domain.Filter, builder sq.SelectBuilder) sq.SelectBuilder {
@@ -60,9 +76,16 @@ func withFilters(filter domain.Filter, builder sq.SelectBuilder) sq.SelectBuilde
 	if filter.UnitId != 0 {
 		builder = builder.Where(sq.Eq{"unit_id": filter.UnitId})
 	}
+	if filter.GradeId != 0 {
+		builder = builder.Where(sq.Eq{"grade_id": filter.GradeId})
+	}
 	if filter.SearchText != "" {
 		builder = builder.Where(sq.Like{"lesson.name": "%" + filter.SearchText + "%"})
 	}
-	builder = builder.OrderBy("updated_at desc")
+
 	return builder
+}
+
+func withOrderBy(builder sq.SelectBuilder) sq.SelectBuilder {
+	return builder.OrderBy("updated_at desc")
 }

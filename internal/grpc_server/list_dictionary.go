@@ -18,12 +18,19 @@ func (i *Implementation) ListDictionary(ctx context.Context, request *inquiry.Li
 		return nil, status.Errorf(codes.Internal, "error in ListSubjects: %v", err)
 	}
 
-	resp := make([]*inquiry.IdName, len(dictionary))
-
-	for k, v := range dictionary {
-		resp[k] = mappings.ToIdName(v)
+	dictionaries := make([]*inquiry.Dictionary, 0, len(dictionary))
+	for _, v := range dictionary {
+		pairs := make([]*inquiry.IdName, 0, len(v.Pairs))
+		for _, pair := range v.Pairs {
+			pairs = append(pairs, mappings.ToIdName(pair))
+		}
+		dictionaries = append(dictionaries, &inquiry.Dictionary{
+			Type:  inquiry.DictionaryType(v.Type),
+			Pairs: pairs,
+		})
 	}
+
 	return &inquiry.ListDictionaryResponse{
-		Pairs: resp,
+		Dictionaries: dictionaries,
 	}, nil
 }

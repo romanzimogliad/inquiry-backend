@@ -15,7 +15,7 @@ type Database interface {
 	Ping(ctx context.Context) (string, error)
 	CreateLesson(ctx context.Context, lesson *domain.Lesson) (string, error)
 	UpdateLesson(ctx context.Context, lesson *domain.Lesson) error
-	ListLessons(ctx context.Context, lesson *domain.ListLessonsRequest) ([]*domain.Lesson, error)
+	ListLessons(ctx context.Context, lesson *domain.ListLessonsRequest) (*domain.Lessons, error)
 	GetLesson(ctx context.Context, lesson *domain.GetLessonsRequest) (*domain.Lesson, error)
 	DeleteLesson(ctx context.Context, lesson *domain.GetLessonsRequest) error
 	ListSubjects(ctx context.Context) ([]*domain.Subject, error)

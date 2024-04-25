@@ -25,6 +25,8 @@ func (d *Database) ListDictionary(ctx context.Context, dictionaryType domain.Dic
 		table = model.SkillTableName.String()
 	case domain.UnitDictionaryType:
 		table = model.UnitTableName.String()
+	case domain.GradeDictionaryType:
+		table = model.GradeTableName.String()
 	}
 	query, args, err := sq.Select("*").From(table).PlaceholderFormat(sq.Dollar).
 		ToSql()

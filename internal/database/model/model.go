@@ -13,4 +13,5 @@ const (
 	SkillTableName            TableName = "skill"
 	UnitTableName             TableName = "unit"
 	MaterialToLessonTableName TableName = "material_to_lesson"
+	GradeTableName            TableName = "grade"
 )

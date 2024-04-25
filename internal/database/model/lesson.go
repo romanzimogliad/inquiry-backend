@@ -32,12 +32,12 @@ type Lesson struct {
 
 type Lessons []*Lesson
 
-func (l *Lessons) ToDomain() []*domain.Lesson {
+func (l *Lessons) ToDomain(count int32) *domain.Lessons {
 	resp := make([]*domain.Lesson, len(*l))
 	for k, v := range *l {
 		resp[k] = v.ToDomain()
 	}
-	return resp
+	return &domain.Lessons{Lessons: resp, Count: count}
 }
 
 func (l *Lesson) ToDomain() *domain.Lesson {
