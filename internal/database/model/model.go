@@ -14,4 +14,6 @@ const (
 	UnitTableName             TableName = "unit"
 	MaterialToLessonTableName TableName = "material_to_lesson"
 	GradeTableName            TableName = "grade"
+	UserTableName             TableName = `"user"`
+	MethodToRoleTableName     TableName = `"method_to_role"`
 )

@@ -36,6 +36,9 @@ type Struct struct {
 		Key    string `yaml:"key" env:"AWS_ACCESS_KEY" env-default:""`
 		Secret string `yaml:"secret" env:"AWS_SECRET_KEY" env-default:""`
 	}
+	Auth struct {
+		SecretKey string `yaml:"secret_key" env:"AUTH_SECRET_KEY" env-default:""`
+	}
 }
 
 // Config configuration.

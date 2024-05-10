@@ -37,6 +37,7 @@ type InquiryClient interface {
 	// List Subjects
 	ListSubjects(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListSubjectsResponse, error)
 	ListDictionary(ctx context.Context, in *ListDictionaryRequest, opts ...grpc.CallOption) (*ListDictionaryResponse, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 }
 
 type inquiryClient struct {
@@ -119,6 +120,15 @@ func (c *inquiryClient) ListDictionary(ctx context.Context, in *ListDictionaryRe
 	return out, nil
 }
 
+func (c *inquiryClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, "/inquiry.Inquiry/Login", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // InquiryServer is the server API for Inquiry service.
 // All implementations must embed UnimplementedInquiryServer
 // for forward compatibility
@@ -138,6 +148,7 @@ type InquiryServer interface {
 	// List Subjects
 	ListSubjects(context.Context, *Empty) (*ListSubjectsResponse, error)
 	ListDictionary(context.Context, *ListDictionaryRequest) (*ListDictionaryResponse, error)
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	mustEmbedUnimplementedInquiryServer()
 }
 
@@ -168,6 +179,9 @@ func (UnimplementedInquiryServer) ListSubjects(context.Context, *Empty) (*ListSu
 }
 func (UnimplementedInquiryServer) ListDictionary(context.Context, *ListDictionaryRequest) (*ListDictionaryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDictionary not implemented")
+}
+func (UnimplementedInquiryServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 func (UnimplementedInquiryServer) mustEmbedUnimplementedInquiryServer() {}
 
@@ -326,6 +340,24 @@ func _Inquiry_ListDictionary_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Inquiry_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InquiryServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/inquiry.Inquiry/Login",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InquiryServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Inquiry_ServiceDesc is the grpc.ServiceDesc for Inquiry service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -364,6 +396,10 @@ var Inquiry_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListDictionary",
 			Handler:    _Inquiry_ListDictionary_Handler,
+		},
+		{
+			MethodName: "Login",
+			Handler:    _Inquiry_Login_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

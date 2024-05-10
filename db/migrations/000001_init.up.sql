@@ -49,11 +49,6 @@ CREATE TABLE IF NOT EXISTS skill (
 
 
 
-CREATE TABLE IF NOT EXISTS "user" (
-    id integer PRIMARY KEY,
-    name text
-);
-
 CREATE TABLE IF NOT EXISTS material (
     id integer PRIMARY KEY,
     material_type_id integer,
@@ -84,6 +79,25 @@ CREATE TABLE IF NOT EXISTS subject (
     id integer PRIMARY KEY,
     name text
 );
+
+CREATE TABLE IF NOT EXISTS "user" (
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    password TEXT,
+    role_id integer
+);
+
+
+CREATE TABLE IF NOT EXISTS method_to_role
+(
+    id SERIAL PRIMARY KEY,
+    method  TEXT,
+    role_id integer
+);
+
+
+
+
 
 INSERT INTO lesson  ("name", "unit_id", "text", "duration", "user_id", "description", "grade_id", "subject_id","concept_id","skill_id","active") VALUES
                     ('How to count',1,'Title: Exploring Geometric Shapes
@@ -179,5 +193,13 @@ INSERT INTO skill VALUES (0,'All'),(1,'Thinking'), (2,'Communication'), (3,'Rese
                            (4,'Self-management'),(5, 'Social');
 
 
+INSERT INTO "user" VALUES (1,'anna','test',1);
 
-
+INSERT INTO method_to_role VALUES (0,'/inquiry.Inquiry/CreateLesson',1),
+                                  (1,'/inquiry.Inquiry/UpdateLesson',1),
+                                  (2,'/inquiry.Inquiry/DeleteLesson',1)
+--                                   (2,'/inquiry.Inquiry/ListLessons',2),
+--                                   (2,'/inquiry.Inquiry/GetLesson',2),
+--                                   (2,'/inquiry.Inquiry/ListSubjects',2),
+--                                   (2,'/inquiry.Inquiry/ListDictionary',2)
+;

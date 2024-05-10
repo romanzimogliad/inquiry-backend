@@ -13,6 +13,8 @@
   "s3": {
     "region":"ap-northeast-1",
     "bucket":"rvz-inquiry"
+  },
+  "auth":{
+     "secret_key":"123"
   }
-
 }

@@ -3,6 +3,13 @@ networks:
   net:
     driver: bridge
 services:
+  prometheus:
+    image: prometheus
+    build: ./prometheus/
+    ports:
+      - "9090:9090"
+    networks:
+      - net
   pg_inquiry:
     image: postgres
     environment:

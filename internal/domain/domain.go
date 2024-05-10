@@ -23,6 +23,8 @@ type Database interface {
 	UpdateLessonFile(ctx context.Context, lesson *domain.Lesson) error
 	AddMaterials(ctx context.Context, request *domain.AddFileRequest) error
 	DeleteMaterials(ctx context.Context, request []string) error
+	GetUser(ctx context.Context, name string) (*domain.User, error)
+	GetMethodToRole(ctx context.Context) ([]*domain.MethodToRole, error)
 }
 
 type FileStorage interface {

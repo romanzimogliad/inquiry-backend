@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/romanzimoglyad/inquiry-backend/internal/auth"
+
 	"github.com/romanzimoglyad/inquiry-backend/internal/domain"
 	domainModel "github.com/romanzimoglyad/inquiry-backend/internal/domain/domain"
 	"github.com/romanzimoglyad/inquiry-backend/internal/interceptor"
@@ -43,9 +45,17 @@ func (a *App) initDeps(service *domain.InquiryService) {
 }
 
 func (a *App) initGRPCServer(service *domain.InquiryService) {
+	mtr, err := service.GetMethodToRole(context.Background())
+	if err != nil {
+		logger.Fatal().Msgf("Error in GetMethodToRole: %v", err)
+	}
+	m := make(map[string]int32, len(mtr))
+	for _, v := range mtr {
+		m[v.Method] = v.RoleId
+	}
 	s := grpc.NewServer(
 		grpc.UnaryInterceptor(
-			grpcMiddleware.ChainUnaryServer(interceptor.LoggingInterceptor),
+			grpcMiddleware.ChainUnaryServer(interceptor.LoggingInterceptor, interceptor.AuthInterceptor(m)),
 		),
 	)
 
@@ -104,7 +114,23 @@ func (a *App) RunGrpcServer() {
 
 func (a *App) uploadHandler(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
 	// Parse the multipart form data
-	err := r.ParseMultipartForm(10 << 20) // Set max memory to 10MB
+	token, ok := r.Header["Authorization"]
+	if !ok {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	// Validate token
+	claims, err := auth.ValidateToken(token[0])
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	if !(claims.Role == int32(auth.RoleAdmin)) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	err = r.ParseMultipartForm(10 << 20) // Set max memory to 10MB
 	if err != nil {
 		http.Error(w, "Failed to parse multipart form", http.StatusBadRequest)
 		return
